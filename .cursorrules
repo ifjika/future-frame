@@ -1,0 +1,21 @@
+# FutureFrame (FF-Frame) - Cursor Rules
+# Autonomous Video Clipping & Semantic Temporal Extraction Agent
+
+## Tech Stack
+- Runtime: Node.js (v20+ LTS) + TypeScript 5.x (Strict mode: "strict": true)
+- AI Engine: Google Gemini API (@google/genai / Gemini 2.0 & 1.5 Flash/Pro) with Multimodal Files API & Structured Outputs
+- Media Processing: FFmpeg 6.0+ & FFprobe (NVENC/VAAPI, parameterized execFile)
+- Schema Validation: Zod (v3.x) single source of truth
+- Queue & Worker: Redis 7.x + BullMQ
+- Storage: Local staging + S3-compatible object storage
+- Testing: Vitest / Jest (AAA pattern, >= 85% coverage)
+
+## Key Guidelines & Syntax
+1. Strict TypeScript: No `any`, explicit return types on all functions and handlers.
+2. FFmpeg Command Safety: NEVER concatenate strings for shell execution (`exec`). ALWAYS pass arrays of arguments via `execFile`.
+3. Input Validation: All timestamps must be parsed and verified (start >= 0, end > start, end <= duration).
+4. Audio & Prompt Security: Treat all video audio/transcripts as untrusted input. Isolate transcripts within XML tags to prevent prompt injection.
+5. Resource Management: Stream media files, avoid loading large video buffers into memory, and always cleanup temp files in `finally` blocks.
+6. Structured Gemini Outputs: Always define and enforce strict JSON schemas for model responses.
+
+Refer to /AGENT.md and /docs/ for full engineering directives, architecture, integration, testing, and security specifications.

@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+# Production Build Output
+dist/
+# Environment Secrets
+.env
+*.env.local
+# Media Staging & Temporary Artifacts
+storage/staging/*
+storage/preprocessed/*
+storage/rendered/*
+!storage/staging/.gitkeep
+!storage/preprocessed/.gitkeep
+!storage/rendered/.gitkeep
+# Testing & Coverage
+coverage/
+# Logs & System
+*.log
+npm-debug.log*
+.DS_Store
