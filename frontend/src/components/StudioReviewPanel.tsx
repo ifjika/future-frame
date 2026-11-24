@@ -28,7 +28,9 @@ export function StudioReviewPanel({
   onRenderHighScore,
 }: StudioReviewPanelProps) {
   const [showSafeZone, setShowSafeZone] = useState(true)
-  const selectedClip = clips.find((c) => c.id === selectedClipId) ?? clips[0]
+  const sortedClips = [...clips].sort((a, b) => b.hookScore - a.hookScore)
+  const topClipId = sortedClips[0]?.id
+  const selectedClip = sortedClips.find((c) => c.id === selectedClipId) ?? sortedClips[0]
 
   if (!selectedClip) return null
 
@@ -61,58 +63,109 @@ export function StudioReviewPanel({
         </div>
 
         <div className="clip-list">
-          {clips.map((clip) => (
-            <article
-              key={clip.id}
-              className={`ff-glass clip-card ${clip.id === selectedClip.id ? 'selected' : ''}`}
-              onClick={() => onSelectClip(clip.id)}
-            >
-              <div className="clip-header">
-                <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 600 }}>{clip.title}</h3>
-                <span className="hook-badge">Hook {clip.hookScore.toFixed(1)}</span>
-              </div>
+          {sortedClips.map((clip, index) => {
+            const isTopRecommended = clip.id === topClipId
+            const tierLabel =
+              clip.hookScore >= 8.0
+                ? 'Auto-Render'
+                : clip.hookScore >= 7.0
+                  ? 'Review'
+                  : 'Opsional'
 
-              <div className="meta-row ff-mono">
-                <span>
-                  {clip.startTime} &rarr; {clip.endTime}
-                </span>
-                <span>&bull;</span>
-                <span>{clip.durationSec}s</span>
-                <span>&bull;</span>
-                <span>Crop X: {clip.cropX}%</span>
-              </div>
-
-              <p style={{ margin: '0 0 10px', fontSize: '0.86rem', color: 'var(--ff-text-secondary)' }}>
-                {clip.reason}
-              </p>
-
-              <div
-                style={{
-                  fontSize: '0.8rem',
-                  padding: '8px 10px',
-                  borderRadius: 8,
-                  background: 'rgba(7, 9, 14, 0.6)',
-                  color: 'var(--ff-text-primary)',
-                }}
+            return (
+              <article
+                key={clip.id}
+                className={`ff-glass clip-card ${clip.id === selectedClip.id ? 'selected' : ''}`}
+                onClick={() => onSelectClip(clip.id)}
               >
-                &ldquo;{clip.transcriptSnippet}&rdquo;
-              </div>
-
-              {clip.renderStatus !== 'idle' && (
-                <div style={{ marginTop: 12, fontSize: '0.8rem' }}>
-                  {clip.renderStatus === 'rendering' ? (
-                    <span style={{ color: 'var(--ff-brand-cyan)' }}>
-                      FFmpeg Rendering... {clip.renderProgress}%
-                    </span>
-                  ) : (
-                    <span style={{ color: 'var(--ff-status-success)', fontWeight: 600 }}>
-                      Siap Diunduh (9:16 MP4)
-                    </span>
-                  )}
+                <div className="clip-header">
+                  <div>
+                    {isTopRecommended && (
+                      <div
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: 5,
+                          fontSize: '0.72rem',
+                          fontWeight: 700,
+                          color: 'var(--ff-brand-cyan)',
+                          marginBottom: 4,
+                        }}
+                      >
+                        <Sparkles size={12} />
+                        REKOMENDASI TERBAIK #{index + 1}
+                      </div>
+                    )}
+                    <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 600 }}>{clip.title}</h3>
+                  </div>
+                  <span className="hook-badge">
+                    Hook {clip.hookScore.toFixed(1)} &bull; {tierLabel}
+                  </span>
                 </div>
-              )}
-            </article>
-          ))}
+
+                <div className="meta-row ff-mono">
+                  <span>
+                    {clip.startTime} &rarr; {clip.endTime}
+                  </span>
+                  <span>&bull;</span>
+                  <span>{clip.durationSec}s</span>
+                  <span>&bull;</span>
+                  <span>Crop X: {clip.cropX}%</span>
+                </div>
+
+                <div
+                  className="meta-row ff-mono"
+                  style={{
+                    fontSize: '0.74rem',
+                    color: 'var(--ff-text-secondary)',
+                    background: 'rgba(13, 17, 26, 0.7)',
+                    padding: '6px 10px',
+                    borderRadius: 8,
+                  }}
+                >
+                  <span>Curiosity: {clip.curiosity.toFixed(1)}</span>
+                  <span>&bull;</span>
+                  <span>Emotion: {clip.emotion.toFixed(1)}</span>
+                  <span>&bull;</span>
+                  <span>Actionable: {clip.actionable.toFixed(1)}</span>
+                </div>
+
+                <p style={{ margin: '0 0 10px', fontSize: '0.86rem', color: 'var(--ff-text-secondary)' }}>
+                  {clip.reason}
+                </p>
+
+                <div
+                  style={{
+                    fontSize: '0.8rem',
+                    padding: '8px 10px',
+                    borderRadius: 8,
+                    background: 'rgba(7, 9, 14, 0.6)',
+                    color: 'var(--ff-text-primary)',
+                  }}
+                >
+                  &ldquo;{clip.transcriptSnippet}&rdquo;
+                </div>
+
+                {clip.renderStatus !== 'idle' && (
+                  <div style={{ marginTop: 12, fontSize: '0.8rem' }}>
+                    {clip.renderStatus === 'rendering' ? (
+                      <span style={{ color: 'var(--ff-brand-cyan)' }}>
+                        FFmpeg Rendering... {clip.renderProgress}%
+                      </span>
+                    ) : clip.renderStatus === 'failed' ? (
+                      <span style={{ color: 'var(--ff-status-danger)', fontWeight: 600 }}>
+                        Render Gagal
+                      </span>
+                    ) : (
+                      <span style={{ color: 'var(--ff-status-success)', fontWeight: 600 }}>
+                        Siap Diunduh (9:16 MP4)
+                      </span>
+                    )}
+                  </div>
+                )}
+              </article>
+            )
+          })}
         </div>
       </div>
 
@@ -221,10 +274,15 @@ export function StudioReviewPanel({
 
         {selectedClip.renderStatus === 'completed' ? (
           <a
-            href="#download-ready"
+            href={selectedClip.downloadUrl ?? '#download-ready'}
+            download={selectedClip.downloadUrl ? `${selectedClip.id}.mp4` : undefined}
             onClick={(e) => {
-              e.preventDefault()
-              alert(`Klip "${selectedClip.title}" siap diunduh setelah endpoint render backend aktif.`)
+              if (!selectedClip.downloadUrl) {
+                e.preventDefault()
+                alert(
+                  `Demo Mode: Klip "${selectedClip.title}" selesai disimulasikan. Unggah video lokal saat API Online untuk mengunduh MP4 asli.`
+                )
+              }
             }}
             className="btn-primary"
             style={{ width: '100%', textDecoration: 'none' }}
@@ -243,7 +301,9 @@ export function StudioReviewPanel({
             <Wand2 size={16} />
             {selectedClip.renderStatus === 'rendering'
               ? `Merender (${selectedClip.renderProgress}%)...`
-              : 'Render Klip Ini'}
+              : selectedClip.renderStatus === 'failed'
+                ? 'Render Gagal — Coba Lagi'
+                : 'Render Klip Ini'}
           </button>
         )}
       </aside>

@@ -1,5 +1,5 @@
+import { Link2, Play, UploadCloud } from 'lucide-react'
 import { useRef, useState } from 'react'
-import { Link2, UploadCloud, Play } from 'lucide-react'
 import type { IngestionSource } from '../types/studio'
 
 interface IngestionPanelProps {
@@ -10,7 +10,7 @@ const MAX_SIZE_BYTES = 3 * 1024 * 1024 * 1024 // 3 GB
 const ALLOWED_TYPES = ['video/mp4', 'video/quicktime', 'video/x-matroska']
 
 export function IngestionPanel({ onStartPipeline }: IngestionPanelProps) {
-  const [mode, setMode] = useState<'file' | 'url'>('file')
+  const [mode, setMode] = useState<'url' | 'file'>('url')
   const [dragging, setDragging] = useState(false)
   const [urlInput, setUrlInput] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -32,6 +32,7 @@ export function IngestionPanel({ onStartPipeline }: IngestionPanelProps) {
       label: file.name,
       sizeBytes: file.size,
       previewUrl,
+      file,
     })
   }
 
@@ -69,6 +70,19 @@ export function IngestionPanel({ onStartPipeline }: IngestionPanelProps) {
         <button
           type="button"
           role="tab"
+          aria-selected={mode === 'url'}
+          className={`tab-btn ${mode === 'url' ? 'active' : ''}`}
+          onClick={() => {
+            setMode('url')
+            setError(null)
+          }}
+        >
+          <Link2 size={16} />
+          URL YouTube / Publik
+        </button>
+        <button
+          type="button"
+          role="tab"
           aria-selected={mode === 'file'}
           className={`tab-btn ${mode === 'file' ? 'active' : ''}`}
           onClick={() => {
@@ -78,19 +92,6 @@ export function IngestionPanel({ onStartPipeline }: IngestionPanelProps) {
         >
           <UploadCloud size={16} />
           Upload Lokal
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={mode === 'url'}
-          className={`tab-btn ${mode === 'url' ? 'active' : ''}`}
-          onClick={() => {
-            setMode('url')
-            setError(null)
-          }}
-        >
-          <Link2 size={16} />
-          URL Video Publik
         </button>
       </div>
 

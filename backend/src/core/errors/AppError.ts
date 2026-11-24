@@ -47,3 +47,12 @@ export class InferenceError extends AppError {
     super(message, details);
   }
 }
+
+export class RenderError extends AppError {
+  public readonly statusCode = 500;
+  public readonly errorCode = 'ERR_MEDIA_RENDER_FAILED';
+
+  constructor(message: string, details?: unknown) {
+    super(message, details);
+  }
+}

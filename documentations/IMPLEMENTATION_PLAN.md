@@ -2,7 +2,7 @@
 # FutureFrame (FF-Frame)
 > **Autonomous Video Clipping & Semantic Temporal Extraction Agent**  
 > *Author: Future Foundation Research & Engineering Team*  
-> *Version: 1.1.0 | Status: Active Delivery Roadmap*
+> *Version: 1.2.0 | Status: Active Delivery Roadmap*
 
 ---
 
@@ -63,10 +63,10 @@ Sprint 5: FutureFrame Studio Web UI & Telemetry Dashboard (Week 5)
 ### Sprint 3: FFmpeg Execution Engine, Smart Crop & Subtitles
 * **Tujuan Utama:** Memotong video secara deterministik, mengubah orientasi ke 9:16, dan membakar subtitle dinamis.
 * **Tasks:**
-  * [ ] Implementasi algoritma koordinat $X_{crop}$ dengan padding silang dan batasan piksel aman ([TSD.md](file:///d:/projects/future-frame/docs/TSD.md)).
-  * [ ] Implementasi filtergraph builder untuk cropping vertikal (16:9 ke 9:16) via `execFile` terparameterisasi.
-  * [ ] Pembuatan generator subtitle Advanced SubStation Alpha (`.ass`) dengan gaya highlight kata aktif (Karaoke Yellow).
-  * [ ] Integrasi akselerasi hardware NVENC / VAAPI untuk eksekusi render cepat.
+  * [x] Implementasi algoritma koordinat $X_{crop}$ dengan padding silang dan batasan piksel aman (`filtergraph-builder.ts`).
+  * [x] Implementasi filtergraph builder untuk cropping vertikal (16:9 ke 9:16) via `execFile` terparameterisasi.
+  * [x] Pembuatan generator subtitle Advanced SubStation Alpha (`.ass`) dengan gaya highlight kata aktif (`ass-generator.ts`).
+  * [x] Integrasi encoder `libx264` & opsi akselerasi hardware `h264_nvenc` (`ffmpeg-process.ts`).
 * **Prasyarat & Masukan:** Sprint 2 selesai; daftar stempel waktu dan koordinat crop tersedia.
 * **Definition of Done (DoD):**
   * Klip 60 detik berhasil dirender dalam format MP4 (H.264/AAC) dalam waktu < 15 detik.
@@ -77,10 +77,11 @@ Sprint 5: FutureFrame Studio Web UI & Telemetry Dashboard (Week 5)
 ### Sprint 4: Distributed Job Queue & Webhook Infrastructure
 * **Tujuan Utama:** Mengelola skalabilitas pemrosesan video paralel tanpa membebani thread HTTP server.
 * **Tasks:**
-  * [ ] Setup antrean BullMQ dengan backend Redis 7.x (`ingestQueue`, `renderQueue`).
-  * [ ] Implementasi worker pool dengan *concurrency limit* (maksimal 2–4 job render simultan per worker).
-  * [ ] Mekanisme retry otomatis dengan *exponential backoff* untuk menangani kegagalan sementara.
-  * [ ] Implementasi dispatcher webhook dengan enkripsi signature HMAC-SHA256 pada header `X-FutureFrame-Signature`.
+  * [x] Setup antrean BullMQ dengan backend Redis 7.x (`config/redis.ts`, `queue/queues.ts`).
+  * [x] Implementasi worker pool dengan *concurrency limit* (`render.worker.ts`, `worker.ts`).
+  * [x] Mekanisme retry otomatis dengan *exponential backoff* untuk menangani kegagalan sementara.
+  * [x] Implementasi dispatcher webhook dengan enkripsi signature HMAC-SHA256 pada header `X-FutureFrame-Signature` (`webhook-dispatcher.ts`).
+  * [x] API Gateway endpoint (`POST /projects/url`, `POST /projects/upload`, `GET /projects/:id`, `GET /projects/:id/preview`, `POST /projects/:id/clips/:clipId/render`, `GET /projects/:id/clips/:clipId/download`).
 * **Prasyarat & Masukan:** Sprint 1, 2, dan 3 selesai; Redis server aktif.
 * **Definition of Done (DoD):**
   * Server HTTP mampu menerima 50 request proyek simultan tanpa mengalami *event loop blockage*.

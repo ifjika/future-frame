@@ -1,7 +1,7 @@
 import { GoogleGenAI } from '@google/genai';
 import { ValidationError } from '../core/errors/AppError.js';
 
-export const GEMINI_DEFAULT_MODEL = 'gemini-2.5-flash';
+export const GEMINI_DEFAULT_MODEL = process.env['GEMINI_MODEL']?.trim() || 'gemini-3.0-flash';
 
 let cachedClient: GoogleGenAI | null = null;
 

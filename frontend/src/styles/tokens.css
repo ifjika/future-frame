@@ -67,3 +67,16 @@ body {
 .ff-display {
   font-family: var(--ff-font-display);
 }
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
