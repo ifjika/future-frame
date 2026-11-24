@@ -1,0 +1,69 @@
+:root {
+  /* Surfaces & Backgrounds */
+  --ff-bg-void: #07090E;
+  --ff-surface-base: #0D111A;
+  --ff-surface-raised: #141B27;
+  --ff-surface-glass: rgba(20, 27, 39, 0.72);
+  --ff-surface-glass-border: rgba(255, 255, 255, 0.08);
+
+  /* Typography Colors */
+  --ff-text-primary: #F8FAFC;
+  --ff-text-secondary: #94A3B8;
+  --ff-text-muted: #64748B;
+  --ff-text-inverse: #07090E;
+
+  /* Brand Accents & Glows */
+  --ff-brand-cyan: #06B6D4;
+  --ff-brand-cyan-glow: rgba(6, 182, 212, 0.25);
+  --ff-brand-violet: #8B5CF6;
+  --ff-brand-violet-glow: rgba(139, 92, 246, 0.25);
+
+  /* Status Colors */
+  --ff-status-success: #10B981;
+  --ff-status-warning: #F59E0B;
+  --ff-status-danger: #EF4444;
+  --ff-status-info: #38BDF8;
+
+  /* Typography */
+  --ff-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --ff-font-display: 'Outfit', 'Inter', sans-serif;
+  --ff-font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 12% 10%, rgba(6, 182, 212, 0.12), transparent 36%),
+    radial-gradient(circle at 88% 12%, rgba(139, 92, 246, 0.12), transparent 38%),
+    var(--ff-bg-void);
+  color: var(--ff-text-primary);
+  font-family: var(--ff-font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.ff-glass {
+  background: var(--ff-surface-glass);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--ff-surface-glass-border);
+  border-radius: 16px;
+}
+
+.ff-mono {
+  font-family: var(--ff-font-mono);
+}
+
+.ff-display {
+  font-family: var(--ff-font-display);
+}

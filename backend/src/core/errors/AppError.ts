@@ -29,3 +29,21 @@ export class ValidationError extends AppError {
     super(message, details);
   }
 }
+
+export class PreprocessError extends AppError {
+  public readonly statusCode = 422;
+  public readonly errorCode = 'ERR_MEDIA_PREPROCESS_FAILED';
+
+  constructor(message: string, details?: unknown) {
+    super(message, details);
+  }
+}
+
+export class InferenceError extends AppError {
+  public readonly statusCode = 502;
+  public readonly errorCode = 'ERR_AI_INFERENCE_FAILED';
+
+  constructor(message: string, details?: unknown) {
+    super(message, details);
+  }
+}

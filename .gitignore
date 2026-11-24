@@ -6,15 +6,17 @@ dist/
 .env
 *.env.local
 # Media Staging & Temporary Artifacts
-storage/staging/*
-storage/preprocessed/*
-storage/rendered/*
-!storage/staging/.gitkeep
-!storage/preprocessed/.gitkeep
-!storage/rendered/.gitkeep
+backend/storage/staging/*
+backend/storage/preprocessed/*
+backend/storage/rendered/*
+!backend/storage/staging/.gitkeep
+!backend/storage/preprocessed/.gitkeep
+!backend/storage/rendered/.gitkeep
 # Testing & Coverage
 coverage/
 # Logs & System
 *.log
 npm-debug.log*
-.DS_Store
+.DS_StoreS
+# Agent Instructions
+AGENT.md

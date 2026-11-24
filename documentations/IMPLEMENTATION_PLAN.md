@@ -2,7 +2,7 @@
 # FutureFrame (FF-Frame)
 > **Autonomous Video Clipping & Semantic Temporal Extraction Agent**  
 > *Author: Future Foundation Research & Engineering Team*  
-> *Version: 1.0.0 | Status: Active Delivery Roadmap*
+> *Version: 1.1.0 | Status: Active Delivery Roadmap*
 
 ---
 
@@ -36,8 +36,8 @@ Sprint 5: FutureFrame Studio Web UI & Telemetry Dashboard (Week 5)
 * **Tasks:**
   * [x] Setup proyek TypeScript strict mode (`tsconfig.json`, `package.json`, dual entry points `src/server.ts` & `src/worker.ts`).
   * [x] Implementasi modul `video-probe.ts` untuk membaca resolusi, durasi, dan codec via FFprobe (beserta hierarki `AppError` & `video-probe.schema.ts`).
-  * [ ] Implementasi modul `audio-extractor.ts` untuk downsampling track audio mono 64 kbps mono AAC.
-  * [ ] Setup direktori staging `./storage/` dengan skrip auto-cleaner (`file-cleaner.ts`) untuk menghapus file kedaluwarsa.
+  * [x] Implementasi modul `audio-extractor.ts` untuk downsampling track audio mono 64 kbps mono AAC.
+  * [x] Setup direktori staging `./storage/` dengan skrip auto-cleaner (`file-cleaner.ts`) untuk menghapus file kedaluwarsa.
 * **Prasyarat & Masukan:** FFmpeg 6.0+ terpasang pada host / container.
 * **Definition of Done (DoD):**
   * Video berdurasi 60 menit berhasil diekstraksi audionya dalam waktu < 45 detik.
@@ -48,11 +48,11 @@ Sprint 5: FutureFrame Studio Web UI & Telemetry Dashboard (Week 5)
 ### Sprint 2: Gemini Multimodal Agent & Schema Enforcement
 * **Tujuan Utama:** Menghubungkan engine ekstraksi semantik dengan Google Gemini API menggunakan kontrak JSON yang ketat.
 * **Tasks:**
-  * [ ] Konfigurasi SDK `@google/genai` dengan kredensial aman dari environment variable.
-  * [ ] Implementasi pipeline upload audio preprocessed ke Gemini Files API.
-  * [ ] Perancangan prompt sistem deklaratif dengan isolasi boundary XML `<untrusted_audio_stream>`.
-  * [ ] Registrasi JSON Schema terstruktur pada API Gemini dan validasi runtime via Zod (`gemini-response.schema.ts`).
-  * [ ] Implementasi formulasi skor hook ($Curiosity \times 0.4 + Emotion \times 0.3 + Actionable \times 0.3$).
+  * [x] Konfigurasi SDK `@google/genai` dengan kredensial aman dari environment variable (`src/config/gemini.ts`).
+  * [x] Implementasi pipeline upload audio preprocessed ke Gemini Files API (`src/modules/agent/gemini-agent.service.ts`).
+  * [x] Perancangan prompt sistem deklaratif dengan isolasi boundary XML `<untrusted_audio_stream>`.
+  * [x] Registrasi JSON Schema terstruktur pada API Gemini dan validasi runtime via Zod (`gemini-response.schema.ts`).
+  * [x] Implementasi formulasi skor hook ($Curiosity \times 0.4 + Emotion \times 0.3 + Actionable \times 0.3$).
 * **Prasyarat & Masukan:** Sprint 1 selesai; file audio mono tersedia dari staging.
 * **Definition of Done (DoD):**
   * Respons model Gemini selalu lolos validasi Zod tanpa exception *schema mismatch*.
@@ -91,8 +91,8 @@ Sprint 5: FutureFrame Studio Web UI & Telemetry Dashboard (Week 5)
 ### Sprint 5: FutureFrame Studio Web UI & Telemetry Dashboard
 * **Tujuan Utama:** Membangun antarmuka studio visual yang elegan untuk kurasi dan pratinjau klip.
 * **Tasks:**
-  * [ ] Implementasi token desain [DESIGN_SYSTEM.md](file:///d:/projects/future-frame/docs/DESIGN_SYSTEM.md) (dark mode, glassmorphism card, glowing badges).
-  * [ ] Komponen pratinjau video 9:16 interaktif dengan overlay safe-zone media sosial.
+  * [x] Implementasi token desain [DESIGN_SYSTEM.md](file:///d:/projects/future-frame/documentations/DESIGN_SYSTEM.md) (dark mode, glassmorphism card, glowing badges) pada `frontend/`.
+  * [x] Komponen pratinjau video 9:16 interaktif dengan overlay safe-zone media sosial (`StudioReviewPanel.tsx`).
   * [ ] Scrubber audio interaktif dengan visualisasi skor viral (Gold/Violet/Cyan).
   * [ ] Telemetry dashboard untuk memantau konsumsi token Gemini, waktu render worker, dan antrean tugas aktif.
 * **Prasyarat & Masukan:** API RESTful & WebSocket dari Sprint 4 siap dikonsumsi.
@@ -126,7 +126,7 @@ Sebelum setiap modul dinyatakan selesai (*production-ready*):
 ## 5. Deployment Strategy & Scaling Evolution (< 5 Users to Commercial SaaS)
 
 ### 5.1 Phase 1: Internal Deployment (< 5 Users)
-* **Pola:** Single Repository Monorepo Ramping (`src/` untuk backend engine, `web/` untuk Next.js Studio).
+* **Pola:** Single Repository Monorepo Ramping (`backend/` untuk Fastify + BullMQ engine, `frontend/` untuk React + Vite Studio).
 * **Infrastruktur:** 1 VPS Terjangkau (4 vCPU / 8 GB RAM) atau mesin lokal pengembang.
 * **Orkestrasi:** Dijalankan dengan satu file `docker-compose.yml`:
   * Container 1: `web` (Next.js Studio pada port 3000).

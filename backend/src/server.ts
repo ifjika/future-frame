@@ -1,5 +1,6 @@
 import 'dotenv/config'
 import Fastify from 'fastify'
+import cors from '@fastify/cors'
 
 const app = Fastify({
     logger: {
@@ -10,6 +11,10 @@ const app = Fastify({
             }
         }   
     }
+})
+
+await app.register(cors, {
+    origin: process.env['CORS_ORIGIN'] ?? 'http://localhost:5173'
 })
 
 app.get('/health', async () => {
