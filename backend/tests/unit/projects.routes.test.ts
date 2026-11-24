@@ -3,9 +3,9 @@ import { InMemoryProjectStore } from '../../src/modules/ingest/project.store.js'
 import { buildServer } from '../../src/server.js';
 
 describe('projects.routes & server (AAA)', () => {
-  it('mengembalikan 200 OK pada GET /health', async () => {
+  it('returns 200 OK on GET /health', async () => {
     // Arrange
-    const app = await buildServer();
+    const app = await buildServer(new InMemoryProjectStore(), { logger: false });
 
     // Act
     const response = await app.inject({ method: 'GET', url: '/health' });
@@ -17,17 +17,17 @@ describe('projects.routes & server (AAA)', () => {
       service: 'FutureFrame API Gateway',
     });
     await app.close();
-  });
+  }, 20_000);
 
-  it('mengembalikan 404 jika proyek tidak ditemukan pada GET /projects/:id', async () => {
-    const app = await buildServer();
-    const response = await app.inject({ method: 'GET', url: '/projects/tidak-ada' });
+  it('returns 404 when project is not found on GET /projects/:id', async () => {
+    const app = await buildServer(new InMemoryProjectStore(), { logger: false });
+    const response = await app.inject({ method: 'GET', url: '/projects/non-existent' });
 
     expect(response.statusCode).toBe(404);
     await app.close();
   });
 
-  it('mengembalikan 202 Accepted saat memicu render klip yang valid', async () => {
+  it('returns 202 Accepted when triggering render for a valid clip', async () => {
     // Arrange
     const store = new InMemoryProjectStore();
     store.create({
@@ -68,7 +68,7 @@ describe('projects.routes & server (AAA)', () => {
       createdAt: new Date().toISOString(),
     });
 
-    const app = await buildServer(store);
+    const app = await buildServer(store, { logger: false });
 
     // Act
     const response = await app.inject({

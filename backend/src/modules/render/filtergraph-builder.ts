@@ -31,12 +31,12 @@ function toEvenFloor(value: number): number {
 }
 
 /**
- * Menghitung area crop vertikal 9:16 yang deterministik, berdimensi genap (syarat H.264),
- * serta ter-clamp di dalam batas resolusi video sumber.
+ * Computes deterministic 9:16 vertical crop coordinates with even pixel dimensions
+ * (required by H.264) clamped within the source video bounds.
  */
 export function calculateVerticalCropRegion(input: CropRegionInput): CropRegion {
   if (input.sourceWidth <= 0 || input.sourceHeight <= 0) {
-    throw new ValidationError('Dimensi video sumber harus lebih besar dari 0');
+    throw new ValidationError('Source video dimensions must be greater than 0');
   }
 
   const safeFocusX = clamp(input.focusX, 0, 1);
@@ -57,13 +57,13 @@ export function calculateVerticalCropRegion(input: CropRegionInput): CropRegion 
 }
 
 /**
- * Meng-escape path berkas subtitle agar aman dipakai di dalam filter `subtitles='...'` FFmpeg,
- * termasuk drive letter Windows (mis. `D:\...` -> `D\:/...`).
+ * Escapes subtitle file paths for safe use inside FFmpeg's `subtitles='...'` filter,
+ * including Windows drive letters (e.g., `D:\...` -> `D\:/...`).
  */
 export function escapeSubtitlesFilterPath(subtitlePath: string): string {
   const trimmed = subtitlePath.trim();
   if (!trimmed) {
-    throw new ValidationError('subtitlePath tidak boleh kosong');
+    throw new ValidationError('subtitlePath cannot be empty');
   }
 
   return trimmed

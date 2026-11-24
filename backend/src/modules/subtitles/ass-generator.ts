@@ -38,17 +38,17 @@ export function sanitizeAssText(text: string): string {
 }
 
 /**
- * Menyusun baris teks karaoke dengan tag durasi centisecond `\k` per kata.
+ * Builds a karaoke line with centisecond `\k` duration tags per word.
  */
 export function buildKaraokeLine(words: WordTiming[]): string {
   if (words.length === 0) {
-    throw new ValidationError('Segmen subtitle wajib memiliki minimal satu kata');
+    throw new ValidationError('Subtitle segment must contain at least one word');
   }
 
   return words
     .map((item) => {
       if (item.endSec < item.startSec) {
-        throw new ValidationError('endSec kata tidak boleh lebih kecil dari startSec');
+        throw new ValidationError('Word endSec cannot be less than startSec');
       }
       const durationCs = Math.max(1, Math.round((item.endSec - item.startSec) * 100));
       const cleanWord = sanitizeAssText(item.word);
@@ -62,10 +62,10 @@ export function generateAssContent(
   style: AssSubtitleStyle = 'KARAOKE_YELLOW'
 ): string {
   if (segments.length === 0) {
-    throw new ValidationError('Daftar segmen subtitle tidak boleh kosong');
+    throw new ValidationError('Subtitle segments list cannot be empty');
   }
 
-  // ASS menggunakan format warna &HAABBGGRR: &H0000FFFF = Kuning, &H00FFFFFF = Putih
+  // ASS uses &HAABBGGRR color format: &H0000FFFF = Yellow, &H00FFFFFF = White
   const primaryColor = style === 'KARAOKE_YELLOW' ? '&H0000FFFF' : '&H00FFFFFF';
   const secondaryColor = '&H00FFFFFF';
 
@@ -86,7 +86,7 @@ export function generateAssContent(
 
   const dialogues = segments.map((seg) => {
     if (seg.endSec <= seg.startSec) {
-      throw new ValidationError('endSec segmen harus lebih besar dari startSec');
+      throw new ValidationError('Segment endSec must be greater than startSec');
     }
     const start = formatAssTimestamp(seg.startSec);
     const end = formatAssTimestamp(seg.endSec);

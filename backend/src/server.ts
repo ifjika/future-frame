@@ -9,15 +9,19 @@ import { InMemoryProjectStore } from './modules/ingest/project.store.js';
 import { registerProjectRoutes } from './routes/projects.routes.js';
 
 export async function buildServer(
-  store: InMemoryProjectStore = new InMemoryProjectStore()
+  store: InMemoryProjectStore = new InMemoryProjectStore(),
+  options: { logger?: boolean } = {}
 ): Promise<FastifyInstance> {
+  const enableLogger = options.logger ?? true;
   const app = Fastify({
-    logger: {
-      transport: {
-        target: 'pino-pretty',
-        options: { colorize: true },
-      },
-    },
+    logger: enableLogger
+      ? {
+          transport: {
+            target: 'pino-pretty',
+            options: { colorize: true },
+          },
+        }
+      : false,
   });
 
   await app.register(cors, {

@@ -23,13 +23,13 @@ export interface WebhookDispatchResult {
 }
 
 /**
- * Menghasilkan signature HMAC-SHA256 (`sha256=<hex>`) agar penerima webhook dapat
- * memverifikasi bahwa payload benar-benar berasal dari FutureFrame dan tidak dimodifikasi.
+ * Generates an HMAC-SHA256 signature (`sha256=<hex>`) so webhook consumers can verify
+ * payload authenticity and integrity.
  */
 export function signWebhookPayload(payloadJson: string, secret: string): string {
   const trimmedSecret = secret.trim();
   if (!trimmedSecret) {
-    throw new ValidationError('Webhook secret tidak boleh kosong');
+    throw new ValidationError('Webhook secret cannot be empty');
   }
 
   const digest = createHmac('sha256', trimmedSecret).update(payloadJson).digest('hex');
@@ -43,11 +43,11 @@ export async function dispatchWebhook(
   try {
     parsedUrl = new URL(options.url);
   } catch {
-    throw new ValidationError('URL webhook tidak valid');
+    throw new ValidationError('Invalid webhook URL');
   }
 
   if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
-    throw new ValidationError('URL webhook wajib menggunakan protokol http atau https');
+    throw new ValidationError('Webhook URL must use http or https protocol');
   }
 
   const body = JSON.stringify(options.payload);

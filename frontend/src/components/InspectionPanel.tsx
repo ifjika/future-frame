@@ -18,8 +18,8 @@ export function InspectionPanel({ source, steps }: InspectionPanelProps) {
     <section className="ff-glass inspect-container">
       <h2 className="section-title">2. AI Semantic Inspection</h2>
       <p className="section-desc">
-        Memproses <span className="ff-mono">{source.label}</span> melalui pipeline FFmpeg &amp;
-        Google Gemini Multimodal.
+        Processing <span className="ff-mono">{source.label}</span> through the FFmpeg &amp; Google
+        Gemini Multimodal pipeline.
       </p>
 
       <div className="pipeline-list">

@@ -60,7 +60,7 @@ async function runAnalyzePipeline(
   } catch (err: unknown) {
     store.update(projectId, {
       status: 'FAILED',
-      errorMessage: err instanceof Error ? err.message : 'Pipeline gagal diproses',
+      errorMessage: err instanceof Error ? err.message : 'Pipeline processing failed',
     });
   }
 }
@@ -76,7 +76,7 @@ export async function registerProjectRoutes(
   app.post('/projects/url', async (request, reply) => {
     const parsed = UrlIngestBodySchema.safeParse(request.body ?? {});
     if (!parsed.success) {
-      return reply.code(400).send({ error: 'URL video tidak valid' });
+      return reply.code(400).send({ error: 'Invalid video URL' });
     }
 
     const projectId = randomUUID();
@@ -98,7 +98,7 @@ export async function registerProjectRoutes(
       .catch((err: unknown) => {
         deps.store.update(projectId, {
           status: 'FAILED',
-          errorMessage: err instanceof Error ? err.message : 'Gagal mengunduh URL video',
+          errorMessage: err instanceof Error ? err.message : 'Failed to download video URL',
         });
       });
 
@@ -108,12 +108,12 @@ export async function registerProjectRoutes(
   app.post('/projects/upload', async (request, reply) => {
     const file = await request.file();
     if (!file) {
-      return reply.code(400).send({ error: 'Berkas video wajib diunggah' });
+      return reply.code(400).send({ error: 'Video file is required' });
     }
 
     const ext = path.extname(file.filename).toLowerCase();
     if (!ALLOWED_EXTENSIONS.has(ext)) {
-      return reply.code(400).send({ error: 'Format tidak didukung. Gunakan MP4, MOV, atau MKV.' });
+      return reply.code(400).send({ error: 'Unsupported format. Use MP4, MOV, or MKV.' });
     }
 
     const projectId = randomUUID();
@@ -139,7 +139,7 @@ export async function registerProjectRoutes(
   app.get<{ Params: { projectId: string } }>('/projects/:projectId', async (request, reply) => {
     const project = deps.store.get(request.params.projectId);
     if (!project) {
-      return reply.code(404).send({ error: 'Proyek tidak ditemukan' });
+      return reply.code(404).send({ error: 'Project not found' });
     }
     return { project };
   });
@@ -149,7 +149,7 @@ export async function registerProjectRoutes(
     async (request, reply) => {
       const project = deps.store.get(request.params.projectId);
       if (!project) {
-        return reply.code(404).send({ error: 'Proyek tidak ditemukan' });
+        return reply.code(404).send({ error: 'Project not found' });
       }
       await stat(project.inputPath);
       reply.header('Content-Type', 'video/mp4');
@@ -162,17 +162,17 @@ export async function registerProjectRoutes(
     async (request, reply) => {
       const project = deps.store.get(request.params.projectId);
       if (!project || !project.metadata) {
-        return reply.code(404).send({ error: 'Proyek atau metadata video tidak ditemukan' });
+        return reply.code(404).send({ error: 'Project or video metadata not found' });
       }
 
       const clip = project.clips.find((c) => c.clip_id === request.params.clipId);
       if (!clip) {
-        return reply.code(404).send({ error: 'Klip tidak ditemukan' });
+        return reply.code(404).send({ error: 'Clip not found' });
       }
 
       const bodyParsed = RenderRequestBodySchema.safeParse(request.body ?? {});
       if (!bodyParsed.success) {
-        return reply.code(400).send({ error: 'Parameter render tidak valid' });
+        return reply.code(400).send({ error: 'Invalid render parameters' });
       }
 
       const focusX = bodyParsed.data.focusX ?? clip.crop_focus_coordinates.x;
@@ -207,7 +207,7 @@ export async function registerProjectRoutes(
       const project = deps.store.get(request.params.projectId);
       const clip = project?.clips.find((c) => c.clip_id === request.params.clipId);
       if (!clip?.outputPath) {
-        return reply.code(404).send({ error: 'Hasil render klip belum tersedia' });
+        return reply.code(404).send({ error: 'Rendered clip is not available yet' });
       }
 
       await stat(clip.outputPath);

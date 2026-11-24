@@ -24,7 +24,7 @@ import type {
 const INITIAL_CLIPS: ClipCandidate[] = [
   {
     id: 'clip-1',
-    title: 'Kenapa 90% Konten Kreator Gagal di 3 Detik Pertama',
+    title: 'Why 90% of Creators Lose Viewers in the First 3 Seconds',
     startTime: '00:04:12.500',
     endTime: '00:05:01.000',
     durationSec: 49,
@@ -32,8 +32,8 @@ const INITIAL_CLIPS: ClipCandidate[] = [
     curiosity: 9.5,
     emotion: 8.8,
     actionable: 9.2,
-    reason: 'Pembukaan kontradiktif dengan retensi tinggi dan solusi konkret.',
-    transcriptSnippet: 'Kesalahan terbesar bukan di kamera, tapi di tiga detik pertama.',
+    reason: 'Strong contrarian opener with high retention and concrete takeaway.',
+    transcriptSnippet: 'The biggest mistake is not your camera, it is your first three seconds.',
     cropX: 50,
     subtitleStyle: 'karaoke-yellow',
     renderStatus: 'idle',
@@ -41,7 +41,7 @@ const INITIAL_CLIPS: ClipCandidate[] = [
   },
   {
     id: 'clip-2',
-    title: 'Workflow Otomatisasi Riset Konten Menggunakan AI',
+    title: 'Automating Content Research Workflows with AI',
     startTime: '00:18:30.000',
     endTime: '00:19:22.400',
     durationSec: 52,
@@ -49,8 +49,8 @@ const INITIAL_CLIPS: ClipCandidate[] = [
     curiosity: 8.4,
     emotion: 7.9,
     actionable: 9.3,
-    reason: 'Langkah praktis yang langsung bisa ditiru oleh audiens.',
-    transcriptSnippet: 'Cukup masukkan satu video panjang, sistem langsung pilihkan hook terbaik.',
+    reason: 'Actionable step-by-step workflow viewers can apply immediately.',
+    transcriptSnippet: 'Drop in one long-form video and the system extracts the strongest hooks.',
     cropX: 45,
     subtitleStyle: 'cyber-cyan',
     renderStatus: 'idle',
@@ -58,7 +58,7 @@ const INITIAL_CLIPS: ClipCandidate[] = [
   },
   {
     id: 'clip-3',
-    title: 'Pelajaran Mahal dari Kegagalan Launch Produk Pertama',
+    title: 'Hard Lessons Learned from Our First Product Launch Failure',
     startTime: '00:34:05.200',
     endTime: '00:34:48.900',
     durationSec: 44,
@@ -66,8 +66,8 @@ const INITIAL_CLIPS: ClipCandidate[] = [
     curiosity: 8.0,
     emotion: 8.5,
     actionable: 6.8,
-    reason: 'Cerita personal yang emosional dan relatable.',
-    transcriptSnippet: 'Saat itu server down tepat lima menit setelah kami umumkan rilis.',
+    reason: 'Relatable personal story with strong emotional resonance.',
+    transcriptSnippet: 'Our server went down five minutes after we announced the launch.',
     cropX: 55,
     subtitleStyle: 'clean-white',
     renderStatus: 'idle',
@@ -79,25 +79,25 @@ const BASE_STEPS: PipelineStep[] = [
   {
     id: 'probe',
     label: 'FFprobe Media Validation',
-    detail: 'Memeriksa codec, resolusi, FPS, dan durasi video sumber',
+    detail: 'Inspecting codec, resolution, FPS, and source video duration',
     status: 'pending',
   },
   {
     id: 'audio',
     label: 'Audio Downsampling (Mono 64kbps)',
-    detail: 'Mengekstrak track audio ringan untuk efisiensi token Gemini',
+    detail: 'Extracting lightweight mono audio track for Gemini token efficiency',
     status: 'pending',
   },
   {
     id: 'gemini',
     label: 'Gemini Multimodal Inference',
-    detail: 'Mendeteksi hook viral & stempel waktu semantik',
+    detail: 'Detecting viral hooks & semantic timestamps',
     status: 'pending',
   },
   {
     id: 'zod',
     label: 'Zod Schema & Timestamp Clamping',
-    detail: 'Memvalidasi struktur JSON dan batas durasi klip',
+    detail: 'Validating JSON structure and clip duration bounds',
     status: 'pending',
   },
 ]
@@ -225,19 +225,19 @@ export function App() {
                 setStage('studio')
               } else if (proj.status === 'FAILED') {
                 window.clearInterval(timer)
-                setPipelineError(proj.errorMessage ?? 'Pipeline backend gagal memproses video.')
+                setPipelineError(proj.errorMessage ?? 'Backend pipeline failed to process video.')
               } else {
                 setSteps(mapBackendStatusToSteps(proj.status))
               }
             })
             .catch(() => {
               window.clearInterval(timer)
-              setPipelineError('Gagal menghubungi server backend saat memeriksa progres.')
+              setPipelineError('Failed to reach backend server while checking progress.')
             })
         }, 1500)
         return
       } catch (err) {
-        setPipelineError(err instanceof Error ? err.message : 'Gagal memproses video.')
+        setPipelineError(err instanceof Error ? err.message : 'Failed to process video.')
         return
       }
     }

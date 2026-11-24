@@ -4,7 +4,7 @@ export const TimestampRegex = /^([0-9]{2}):([0-5][0-9]):([0-5][0-9])\.([0-9]{3})
 
 export const TimestampStringSchema = z
   .string()
-  .regex(TimestampRegex, 'Timestamp wajib berformat HH:MM:SS.mmm');
+  .regex(TimestampRegex, 'Timestamp must follow HH:MM:SS.mmm format');
 
 export function parseTimestampToSeconds(timestamp: string): number {
   const [hms = '00:00:00', msStr = '0'] = timestamp.split('.');
@@ -50,7 +50,7 @@ export const ExtractedClipSchema = z
       parseTimestampToSeconds(clip.timestamp_end) >
       parseTimestampToSeconds(clip.timestamp_start),
     {
-      message: 'timestamp_end harus lebih besar dari timestamp_start',
+      message: 'timestamp_end must be greater than timestamp_start',
       path: ['timestamp_end'],
     }
   );

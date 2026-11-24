@@ -35,8 +35,8 @@ export interface RenderClipResult {
 }
 
 /**
- * Menyusun argumen FFmpeg terparameterisasi untuk memotong, crop 9:16,
- * dan membakar subtitle ke MP4 siap streaming (`+faststart`).
+ * Builds parameterized FFmpeg arguments to trim, crop 9:16, and burn subtitles
+ * into a streaming-ready MP4 (`+faststart`).
  */
 export function buildRenderArgs(options: RenderClipOptions): string[] {
   const safeInput = assertSafeMediaPath(options.inputPath, 'inputPath');
@@ -45,14 +45,14 @@ export function buildRenderArgs(options: RenderClipOptions): string[] {
   const startCheck = TimestampStringSchema.safeParse(options.timestampStart);
   const endCheck = TimestampStringSchema.safeParse(options.timestampEnd);
   if (!startCheck.success || !endCheck.success) {
-    throw new ValidationError('timestampStart dan timestampEnd wajib berformat HH:MM:SS.mmm');
+    throw new ValidationError('timestampStart and timestampEnd must follow HH:MM:SS.mmm format');
   }
 
   if (
     parseTimestampToSeconds(options.timestampEnd) <=
     parseTimestampToSeconds(options.timestampStart)
   ) {
-    throw new ValidationError('timestampEnd harus lebih besar dari timestampStart');
+    throw new ValidationError('timestampEnd must be greater than timestampStart');
   }
 
   const filterComplex = buildVerticalFiltergraph({
@@ -104,7 +104,7 @@ export class FfmpegRenderService {
     try {
       await stat(safeInput);
     } catch {
-      throw new RenderError(`Berkas video sumber tidak ditemukan: ${safeInput}`);
+      throw new RenderError(`Source video file not found: ${safeInput}`);
     }
 
     await mkdir(path.dirname(safeOutput), { recursive: true });
@@ -118,7 +118,7 @@ export class FfmpegRenderService {
       });
     } catch (err: unknown) {
       throw new RenderError(
-        `FFmpeg gagal merender klip ke: ${safeOutput}`,
+        `FFmpeg failed to render clip to: ${safeOutput}`,
         err instanceof Error ? err.message : err
       );
     }
@@ -127,11 +127,11 @@ export class FfmpegRenderService {
     try {
       outputStats = await stat(safeOutput);
     } catch {
-      throw new RenderError(`Berkas MP4 hasil render tidak ditemukan: ${safeOutput}`);
+      throw new RenderError(`Rendered MP4 file not found: ${safeOutput}`);
     }
 
     if (outputStats.size <= 0) {
-      throw new RenderError(`Berkas MP4 hasil render kosong (0 byte): ${safeOutput}`);
+      throw new RenderError(`Rendered MP4 file is empty (0 bytes): ${safeOutput}`);
     }
 
     return {

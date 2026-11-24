@@ -24,7 +24,7 @@ export async function submitProjectUrl(
   })
   if (!response.ok) {
     const errBody = (await response.json().catch(() => ({}))) as { error?: string }
-    throw new Error(errBody.error ?? `Gagal memproses URL (HTTP ${response.status})`)
+    throw new Error(errBody.error ?? `Failed to process URL (HTTP ${response.status})`)
   }
   return (await response.json()) as { projectId: string; status: BackendProjectStatus }
 }
@@ -45,7 +45,7 @@ export async function uploadProjectVideo(
   })
   if (!response.ok) {
     const errBody = (await response.json().catch(() => ({}))) as { error?: string }
-    throw new Error(errBody.error ?? `Upload gagal (HTTP ${response.status})`)
+    throw new Error(errBody.error ?? `Upload failed (HTTP ${response.status})`)
   }
   return (await response.json()) as { projectId: string; status: BackendProjectStatus }
 }
@@ -53,7 +53,7 @@ export async function uploadProjectVideo(
 export async function fetchProjectStatus(projectId: string): Promise<BackendProjectDto> {
   const response = await fetch(`${API_BASE}/projects/${encodeURIComponent(projectId)}`)
   if (!response.ok) {
-    throw new Error(`Gagal memuat status proyek (HTTP ${response.status})`)
+    throw new Error(`Failed to fetch project status (HTTP ${response.status})`)
   }
   const data = (await response.json()) as { project: BackendProjectDto }
   return data.project
@@ -74,7 +74,7 @@ export async function requestClipRender(
   )
   if (!response.ok) {
     const errBody = (await response.json().catch(() => ({}))) as { error?: string }
-    throw new Error(errBody.error ?? `Render gagal (HTTP ${response.status})`)
+    throw new Error(errBody.error ?? `Render failed (HTTP ${response.status})`)
   }
   return (await response.json()) as { status: string; clipId: string }
 }

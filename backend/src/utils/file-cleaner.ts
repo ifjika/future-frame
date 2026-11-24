@@ -10,8 +10,8 @@ export interface CleanupResult {
 const DEFAULT_PROTECTED_FILES = new Set(['.gitkeep']);
 
 /**
- * Menghapus berkas sementara yang lebih tua dari `maxAgeMs` pada direktori target,
- * sambil mempertahankan berkas `.gitkeep` dan subdirektori.
+ * Removes temporary files older than `maxAgeMs` inside target directories
+ * while preserving `.gitkeep` and subdirectories.
  */
 export async function cleanupExpiredFiles(
   targetDirs: string[],

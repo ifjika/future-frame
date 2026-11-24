@@ -46,7 +46,7 @@ export const DEFAULT_JOB_OPTIONS: JobsOptions = {
 function assertNonEmptyId(value: string, label: string): string {
   const trimmed = value.trim();
   if (!trimmed) {
-    throw new ValidationError(`${label} tidak boleh kosong`);
+    throw new ValidationError(`${label} cannot be empty`);
   }
   return trimmed;
 }

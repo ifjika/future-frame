@@ -45,39 +45,39 @@ export class VideoProbeService {
       stdout = result.stdout;
     } catch (err: unknown) {
       throw new IngestError(
-        `FFprobe gagal membaca berkas media pada path: ${filePath}`,
+        `FFprobe failed to read media file at path: ${filePath}`,
         err instanceof Error ? err.message : err
       );
     }
 
-    // 1. Parsing JSON stdout FFprobe
+    // 1. Parse FFprobe JSON stdout
     let parsedJson: unknown;
     try {
       parsedJson = JSON.parse(stdout);
     } catch {
-      throw new IngestError('Gagal mem-parsing output JSON dari FFprobe');
+      throw new IngestError('Failed to parse JSON output from FFprobe');
     }
 
-    // 2. Validasi struktur JSON dengan Zod
+    // 2. Validate JSON structure with Zod
     const parsed = RawFFprobeOutputSchema.safeParse(parsedJson);
     if (!parsed.success) {
-      throw new IngestError('Struktur metadata FFprobe tidak valid', parsed.error.issues);
+      throw new IngestError('Invalid FFprobe metadata structure', parsed.error.issues);
     }
 
     const { streams, format } = parsed.data;
 
-    // 3. Ekstraksi Stream Video
+    // 3. Extract video stream
     const videoStream = streams.find((s) => s.codec_type === 'video');
     if (!videoStream || !videoStream.width || !videoStream.height) {
-      throw new IngestError('Berkas media tidak memiliki stream visual (video) yang valid');
+      throw new IngestError('Media file does not contain a valid visual (video) stream');
     }
 
-    // 4. Ekstraksi Stream Audio
+    // 4. Extract audio stream
     const audioStream = streams.find((s) => s.codec_type === 'audio');
 
     const durationSeconds = Number(format.duration);
     if (isNaN(durationSeconds) || durationSeconds <= 0) {
-      throw new IngestError('Durasi berkas media tidak valid atau bernilai 0 detik');
+      throw new IngestError('Media file duration is invalid or 0 seconds');
     }
 
     const width = videoStream.width;

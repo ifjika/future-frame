@@ -49,16 +49,16 @@ export function StudioReviewPanel({
         >
           <div>
             <h2 className="section-title" style={{ marginBottom: 2 }}>
-              Kandidat Klip Viral ({clips.length})
+              Viral Clip Candidates ({clips.length})
             </h2>
             <p style={{ margin: 0, fontSize: '0.82rem', color: 'var(--ff-text-secondary)' }}>
-              Sumber: <span className="ff-mono">{source.label}</span>
+              Source: <span className="ff-mono">{source.label}</span>
             </p>
           </div>
 
           <button type="button" className="btn-primary" onClick={onRenderHighScore}>
             <Sparkles size={15} />
-            Auto-Render Skor &ge; 8.0
+            Auto-Render Score &ge; 8.0
           </button>
         </div>
 
@@ -70,7 +70,7 @@ export function StudioReviewPanel({
                 ? 'Auto-Render'
                 : clip.hookScore >= 7.0
                   ? 'Review'
-                  : 'Opsional'
+                  : 'Optional'
 
             return (
               <article
@@ -93,7 +93,7 @@ export function StudioReviewPanel({
                         }}
                       >
                         <Sparkles size={12} />
-                        REKOMENDASI TERBAIK #{index + 1}
+                        TOP RECOMMENDATION #{index + 1}
                       </div>
                     )}
                     <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 600 }}>{clip.title}</h3>
@@ -154,11 +154,11 @@ export function StudioReviewPanel({
                       </span>
                     ) : clip.renderStatus === 'failed' ? (
                       <span style={{ color: 'var(--ff-status-danger)', fontWeight: 600 }}>
-                        Render Gagal
+                        Render Failed
                       </span>
                     ) : (
                       <span style={{ color: 'var(--ff-status-success)', fontWeight: 600 }}>
-                        Siap Diunduh (9:16 MP4)
+                        Ready to Download (9:16 MP4)
                       </span>
                     )}
                   </div>
@@ -178,7 +178,7 @@ export function StudioReviewPanel({
             marginBottom: 14,
           }}
         >
-          <span style={{ fontWeight: 600, fontSize: '0.95rem' }}>Pratinjau 9:16 Studio</span>
+          <span style={{ fontWeight: 600, fontSize: '0.95rem' }}>9:16 Studio Preview</span>
           <button
             type="button"
             className="btn-secondary"
@@ -217,7 +217,7 @@ export function StudioReviewPanel({
                 <div className="ff-mono" style={{ color: 'var(--ff-brand-cyan)', marginBottom: 6 }}>
                   9:16 VERTICAL FRAME
                 </div>
-                <div>Fokus Pembicara X = {selectedClip.cropX}%</div>
+                <div>Speaker Focus X = {selectedClip.cropX}%</div>
               </div>
             </div>
           )}
@@ -237,7 +237,7 @@ export function StudioReviewPanel({
 
         <div className="control-group">
           <div className="control-label">
-            <span>Posisi Crop Pembicara (X)</span>
+            <span>Speaker Crop Position (X)</span>
             <span className="ff-mono">{selectedClip.cropX}%</span>
           </div>
           <input
@@ -254,7 +254,7 @@ export function StudioReviewPanel({
 
         <div className="control-group">
           <div className="control-label">
-            <span>Gaya Takarir (Subtitle ASS)</span>
+            <span>Subtitle Style (ASS)</span>
           </div>
           <div className="style-chips">
             {(Object.keys(SUBTITLE_LABELS) as SubtitleStyle[]).map((styleKey) => (
@@ -280,7 +280,7 @@ export function StudioReviewPanel({
               if (!selectedClip.downloadUrl) {
                 e.preventDefault()
                 alert(
-                  `Demo Mode: Klip "${selectedClip.title}" selesai disimulasikan. Unggah video lokal saat API Online untuk mengunduh MP4 asli.`
+                  `Demo Mode: Clip "${selectedClip.title}" simulation finished. Submit a YouTube URL or local video while API Online to download the real MP4.`
                 )
               }
             }}
@@ -288,7 +288,7 @@ export function StudioReviewPanel({
             style={{ width: '100%', textDecoration: 'none' }}
           >
             <Download size={16} />
-            Unduh MP4 (9:16)
+            Download MP4 (9:16)
           </a>
         ) : (
           <button
@@ -300,10 +300,10 @@ export function StudioReviewPanel({
           >
             <Wand2 size={16} />
             {selectedClip.renderStatus === 'rendering'
-              ? `Merender (${selectedClip.renderProgress}%)...`
+              ? `Rendering (${selectedClip.renderProgress}%)...`
               : selectedClip.renderStatus === 'failed'
-                ? 'Render Gagal — Coba Lagi'
-                : 'Render Klip Ini'}
+                ? 'Render Failed — Retry'
+                : 'Render This Clip'}
           </button>
         )}
       </aside>

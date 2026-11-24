@@ -19,11 +19,11 @@ export function IngestionPanel({ onStartPipeline }: IngestionPanelProps) {
   const validateAndSubmitFile = (file: File) => {
     setError(null)
     if (!ALLOWED_TYPES.includes(file.type) && !/\.(mp4|mov|mkv)$/i.test(file.name)) {
-      setError('Format tidak didukung. Gunakan file MP4, MOV, atau MKV.')
+      setError('Unsupported format. Please use MP4, MOV, or MKV.')
       return
     }
     if (file.size > MAX_SIZE_BYTES) {
-      setError('Ukuran file melebihi batas maksimal 3 GB.')
+      setError('File size exceeds the 3 GB maximum limit.')
       return
     }
     const previewUrl = URL.createObjectURL(file)
@@ -41,7 +41,7 @@ export function IngestionPanel({ onStartPipeline }: IngestionPanelProps) {
     setError(null)
     const trimmed = urlInput.trim()
     if (!trimmed) {
-      setError('Masukkan URL video yang valid.')
+      setError('Please enter a valid video URL.')
       return
     }
     try {
@@ -54,7 +54,7 @@ export function IngestionPanel({ onStartPipeline }: IngestionPanelProps) {
         label: trimmed,
       })
     } catch {
-      setError('Format URL tidak valid. Pastikan diawali http:// atau https://')
+      setError('Invalid URL format. Make sure it starts with http:// or https://')
     }
   }
 
@@ -62,8 +62,8 @@ export function IngestionPanel({ onStartPipeline }: IngestionPanelProps) {
     <section className="ff-glass ingest-container">
       <h2 className="section-title">1. Media Ingestion</h2>
       <p className="section-desc">
-        Unggah video berdurasi panjang atau masukkan tautan publik untuk dianalisis oleh Gemini
-        Multimodal Agent.
+        Paste a YouTube / public video URL or upload a long-form video for Gemini Multimodal Agent
+        analysis.
       </p>
 
       <div className="tab-row" role="tablist">
@@ -78,7 +78,7 @@ export function IngestionPanel({ onStartPipeline }: IngestionPanelProps) {
           }}
         >
           <Link2 size={16} />
-          URL YouTube / Publik
+          YouTube / Public URL
         </button>
         <button
           type="button"
@@ -91,7 +91,7 @@ export function IngestionPanel({ onStartPipeline }: IngestionPanelProps) {
           }}
         >
           <UploadCloud size={16} />
-          Upload Lokal
+          Local Upload
         </button>
       </div>
 
@@ -116,10 +116,10 @@ export function IngestionPanel({ onStartPipeline }: IngestionPanelProps) {
               <UploadCloud size={26} />
             </div>
             <p style={{ margin: '0 0 6px', fontWeight: 600 }}>
-              Tarik &amp; lepas video di sini, atau klik untuk memilih file
+              Drag &amp; drop a video here, or click to browse
             </p>
             <p style={{ margin: 0, fontSize: '0.82rem', color: 'var(--ff-text-secondary)' }}>
-              Mendukung MP4, MOV, MKV &bull; Maksimal 3 GB
+              Supports MP4, MOV, MKV &bull; Max 3 GB
             </p>
             <input
               ref={fileInputRef}
@@ -145,7 +145,7 @@ export function IngestionPanel({ onStartPipeline }: IngestionPanelProps) {
               }
             >
               <Play size={15} />
-              Coba dengan Video Sampel
+              Try Sample Video
             </button>
           </div>
         </>
@@ -154,14 +154,14 @@ export function IngestionPanel({ onStartPipeline }: IngestionPanelProps) {
           <input
             type="url"
             className="input-field"
-            placeholder="https://youtube.com/watch?v=... atau tautan MP4 langsung"
+            placeholder="https://youtube.com/watch?v=... or direct MP4 URL"
             value={urlInput}
             onChange={(e) => setUrlInput(e.target.value)}
           />
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <button type="submit" className="btn-primary">
               <Play size={16} />
-              Mulai Analisis AI
+              Start AI Analysis
             </button>
           </div>
         </form>

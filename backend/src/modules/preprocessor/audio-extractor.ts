@@ -13,24 +13,24 @@ export interface AudioExtractionResult {
 }
 
 /**
- * Memvalidasi path berkas agar aman dari null-byte maupun flag injection saat diteruskan ke FFmpeg.
+ * Validates file paths to prevent null-byte and FFmpeg flag injection attacks.
  */
 export function assertSafeMediaPath(filePath: string, label: string): string {
   const trimmed = filePath.trim();
   if (!trimmed) {
-    throw new ValidationError(`${label} tidak boleh kosong`);
+    throw new ValidationError(`${label} cannot be empty`);
   }
   if (trimmed.includes('\0')) {
-    throw new ValidationError(`${label} mengandung karakter null-byte yang tidak valid`);
+    throw new ValidationError(`${label} contains an invalid null-byte character`);
   }
   if (trimmed.startsWith('-')) {
-    throw new ValidationError(`${label} tidak boleh diawali karakter '-'`);
+    throw new ValidationError(`${label} cannot start with '-'`);
   }
   return path.resolve(trimmed);
 }
 
 /**
- * Menyusun array argumen FFmpeg terparameterisasi untuk ekstraksi audio mono 64 kbps AAC.
+ * Builds parameterized FFmpeg arguments for mono 64 kbps AAC audio extraction.
  */
 export function buildAudioExtractArgs(inputPath: string, outputPath: string): string[] {
   const safeInput = assertSafeMediaPath(inputPath, 'inputPath');
@@ -67,7 +67,7 @@ export class AudioExtractorService {
     try {
       await stat(safeInput);
     } catch {
-      throw new PreprocessError(`Berkas video sumber tidak ditemukan: ${safeInput}`);
+      throw new PreprocessError(`Source video file not found: ${safeInput}`);
     }
 
     await mkdir(path.dirname(safeOutput), { recursive: true });
@@ -81,7 +81,7 @@ export class AudioExtractorService {
       });
     } catch (err: unknown) {
       throw new PreprocessError(
-        `FFmpeg gagal mengekstrak audio dari: ${safeInput}`,
+        `FFmpeg failed to extract audio from: ${safeInput}`,
         err instanceof Error ? err.message : err
       );
     }
@@ -90,11 +90,11 @@ export class AudioExtractorService {
     try {
       outputStats = await stat(safeOutput);
     } catch {
-      throw new PreprocessError(`Berkas audio hasil ekstraksi tidak ditemukan: ${safeOutput}`);
+      throw new PreprocessError(`Extracted audio file not found: ${safeOutput}`);
     }
 
     if (outputStats.size <= 0) {
-      throw new PreprocessError(`Berkas audio hasil ekstraksi kosong (0 byte): ${safeOutput}`);
+      throw new PreprocessError(`Extracted audio file is empty (0 bytes): ${safeOutput}`);
     }
 
     return {

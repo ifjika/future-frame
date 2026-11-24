@@ -2,7 +2,7 @@
 # FutureFrame (FF-Frame)
 > **Autonomous Video Clipping & Semantic Temporal Extraction Agent**  
 > *Author: Future Foundation Research & Engineering Team*  
-> *Version: 1.2.0 | Status: Active Delivery Roadmap*
+> *Version: 1.2.1 | Status: Active Delivery Roadmap*
 
 ---
 

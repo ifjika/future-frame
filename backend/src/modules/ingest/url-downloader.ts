@@ -24,11 +24,11 @@ export function validatePublicVideoUrl(rawUrl: string): URL {
   try {
     parsed = new URL(rawUrl.trim());
   } catch {
-    throw new ValidationError('URL video tidak valid');
+    throw new ValidationError('Invalid video URL');
   }
 
   if (!['http:', 'https:'].includes(parsed.protocol)) {
-    throw new ValidationError('URL video wajib menggunakan protokol http atau https');
+    throw new ValidationError('Video URL must use http or https protocol');
   }
 
   const host = parsed.hostname.toLowerCase();
@@ -38,7 +38,7 @@ export function validatePublicVideoUrl(rawUrl: string): URL {
     host === '0.0.0.0' ||
     host.startsWith('169.254.')
   ) {
-    throw new ValidationError('URL internal/lokal tidak diizinkan (SSRF protection)');
+    throw new ValidationError('Local/internal URLs are not allowed (SSRF protection)');
   }
 
   return parsed;
@@ -83,17 +83,17 @@ export class UrlDownloaderService {
         const message = err instanceof Error ? err.message : String(err);
         if (message.includes('ENOENT')) {
           throw new IngestError(
-            'yt-dlp belum terpasang di server. Jalankan: winget install yt-dlp.yt-dlp'
+            'yt-dlp is not installed on the server. Run: winget install yt-dlp.yt-dlp'
           );
         }
-        throw new IngestError(`Gagal mengunduh video YouTube: ${message}`);
+        throw new IngestError(`Failed to download YouTube video: ${message}`);
       }
     } else {
       const response = await fetch(parsedUrl.toString(), {
         signal: AbortSignal.timeout(120_000),
       });
       if (!response.ok || !response.body) {
-        throw new IngestError(`Gagal mengunduh URL video (HTTP ${response.status})`);
+        throw new IngestError(`Failed to download video URL (HTTP ${response.status})`);
       }
       await pipeline(
         Readable.fromWeb(response.body as WebReadableStream<Uint8Array>),
@@ -103,7 +103,7 @@ export class UrlDownloaderService {
 
     const fileStat = await stat(safeOutput).catch(() => null);
     if (!fileStat || fileStat.size <= 0) {
-      throw new IngestError('File video hasil unduhan kosong atau tidak ditemukan');
+      throw new IngestError('Downloaded video file is empty or missing');
     }
 
     return { outputPath: safeOutput, sizeBytes: fileStat.size };
